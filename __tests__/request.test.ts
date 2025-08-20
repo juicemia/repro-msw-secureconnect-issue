@@ -83,6 +83,26 @@ describe('msw', () => {
     expect(data).toEqual('not google')
   })
 
+  it('works with NodeHttpClient', async () => {
+    const client = new NodeHttpClient()
+    {
+      const response = await client.makeRequest(
+        'www.google.com',
+        '443',
+        '/',
+        'GET',
+        {
+          'accept': 'application/json'
+        },
+        '',
+        'https',
+        10 * 1000 // 10 seconds
+      )
+
+      expect(response.getStatusCode()).toEqual(200)
+    }
+  }, 20 * 1000)
+
   it('only mocks the URL it is configured to mock', async () => {
     const response = await fetch('https://httpbin.org/get')
     const data: { [key: string]: any } = await response.json() as { [key: string]: any }
